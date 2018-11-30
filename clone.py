@@ -10,7 +10,7 @@ def add_convolutional_layer(filter, kernel_size):
 	add_relu_activation_function()
 
 lines = []
-with open('./simulation_training_data/driving_log.csv') as csvfile:
+with open('./driving_log.csv') as csvfile:
 	reader = csv.reader(csvfile)
 	for row in reader:
 		lines.append(row)
@@ -20,7 +20,7 @@ train_samples, validation_samples = train_test_split(lines, test_size=0.2)
 import sklearn
 from sklearn.utils import shuffle
 
-def generator(samples, batch_size = 32):
+def generator(samples, batch_size = 64):
 	num_samples = len(samples)
 	correction_factor = [0.0, +0.2, -0.2]
 
@@ -37,7 +37,7 @@ def generator(samples, batch_size = 32):
 					#print("batch_sample: ", batch_sample)
 					source_path = batch_sample[i]
 					filename = source_path.split('/')[-1]
-					current_path = './simulation_training_data/IMG/' + filename
+					current_path = './IMG/' + filename
 					image = cv2.imread(current_path)
 					image_flipped = np.fliplr(image)
 					images.append(image)
@@ -60,6 +60,7 @@ from keras.layers.core import Dense, Activation, Flatten, Dropout, Lambda
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 from keras.layers import Cropping2D
+from keras.callbacks import *
 
 model = Sequential()
 model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
@@ -105,9 +106,12 @@ add_relu_activation_function()
 model.add(Dense(1))
 
 model.compile(loss = 'mse', optimizer = 'adam')
+epochs_to_wait_for_improve = 2
+early_stopping_callback = EarlyStopping(monitor='val_loss', patience=epochs_to_wait_for_improve)
+checkpoint_callback = ModelCheckpoint('model.h5', monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 model.fit_generator(train_generator, samples_per_epoch = len(train_samples), 
 	validation_data=validation_generator,
-	nb_val_samples=len(validation_samples), nb_epoch=3)
+	nb_val_samples=len(validation_samples), nb_epoch=50, callbacks=[early_stopping_callback, checkpoint_callback])
 
 model.save('model.h5')
 
