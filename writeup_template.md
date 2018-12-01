@@ -73,6 +73,7 @@ The model used an adam optimizer, so the learning rate was not tuned manually (m
 #### 4. Appropriate training data
 
 Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road as shown in the following images:
+
 ![alt text][image-center]
 ![alt text][image-left]
 ![alt text][image-right]
@@ -84,7 +85,8 @@ For details about how I created the training data, see the next section.
 
 #### 1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+The overall strategy for deriving a model architecture was to trying to simulate my driving behavior on the model by recording 3 images for each frame. These 3 images are corresponding to the center, right, and left cameras on the car.
+For each frame we have the driving wheel angle as the training is a supervised one.
 
 My first step was to use a convolution neural network model similar to the network implementation in NVIDIA architecture. I thought this model might be appropriate because it deals also with a massive amount of images like the NVIDIA architecture did.
 
@@ -121,16 +123,15 @@ The final model architecture (model.py lines 68-90) consisted of a convolution n
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image2]
+![alt text][image-center]
 
 I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover when it goes of the road.
 
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
+To augment the data sat, I also flipped images and angles thinking that this would helpful to help generalizing the model. For example, here is an image that has then been flipped:
 
 ![alt text][image6]
 ![alt text][image7]
 
-Etc ....
 
 After the collection process, I had 4800x3 of data points.
 
