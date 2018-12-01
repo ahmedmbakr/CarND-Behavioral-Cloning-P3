@@ -23,8 +23,8 @@ The goals / steps of this project are the following:
 [image-center]: ./IMG/center_2018_11_30_18_29_51_073.jpg "Center Image"
 [image-left]: ./IMG/left_2018_11_30_18_29_51_073.jpg "Left Image"
 [image-right]: ./IMG/right_2018_11_30_18_29_51_073.jpg "Right Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image-normal]: ./example-images/left_normal.jpg "Normal Image"
+[image-flipped]: ./examples/left_flipped.jpg "Flipped Image"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -129,8 +129,8 @@ I then recorded the vehicle recovering from the left side and right sides of the
 
 To augment the data sat, I also flipped images and angles thinking that this would helpful to help generalizing the model. For example, here is an image that has then been flipped:
 
-![alt text][image6]
-![alt text][image7]
+![alt text][image-normal]
+![alt text][image-flipped]
 
 
 After the collection process, I had 4800x3 of data points.
