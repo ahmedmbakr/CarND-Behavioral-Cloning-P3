@@ -32,9 +32,8 @@ def generator(samples, batch_size = 64):
 			images = []
 			measurments = []
 			
-			for batch_sample in batch_samples:
+			for batch_sample in batch_samples:#get the 3 images for the same frame, and there corresponding readings
 				for i in range(3):
-					#print("batch_sample: ", batch_sample)
 					source_path = batch_sample[i]
 					filename = source_path.split('/')[-1]
 					current_path = './IMG/' + filename
@@ -102,7 +101,7 @@ add_relu_activation_function()
 model.add(Dense(10))
 add_relu_activation_function()
 
-#forth/last fully connected
+#last fully connected
 model.add(Dense(1))
 
 model.compile(loss = 'mse', optimizer = 'adam')
