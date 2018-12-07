@@ -24,7 +24,7 @@ The goals / steps of this project are the following:
 [image-left]: ./IMG/left_2018_11_30_18_29_51_073.jpg "Left Image"
 [image-right]: ./IMG/right_2018_11_30_18_29_51_073.jpg "Right Image"
 [image-normal]: ./example-images/left_normal.jpg "Normal Image"
-[image-flipped]: ./examples/left_flipped.jpg "Flipped Image"
+[image-flipped]: ./example-images/left_flipped.jpg "Flipped Image"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
