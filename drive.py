@@ -11,6 +11,12 @@ import eventlet.wsgi
 from PIL import Image
 from flask import Flask
 from io import BytesIO
+from keras.models import Sequential
+from keras.layers.core import Dense, Activation, Flatten, Dropout, Lambda
+from keras.layers.convolutional import Convolution2D
+from keras.layers.pooling import MaxPooling2D
+from keras.layers import Cropping2D
+from keras.callbacks import *
 
 from keras.models import load_model
 import h5py
@@ -94,6 +100,14 @@ def send_control(steering_angle, throttle):
         skip_sid=True)
 
 
+def add_relu_activation_function():
+	model.add(Activation('relu'))
+
+def add_convolutional_layer(filter, kernel_size):
+	model.add(Convolution2D(filter, kernel_size, kernel_size, border_mode='valid'))
+	add_relu_activation_function()
+	
+	
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Remote Driving')
     parser.add_argument(
@@ -119,7 +133,54 @@ if __name__ == '__main__':
         print('You are using Keras version ', keras_version,
               ', but the model was built using ', model_version)
 
-    model = load_model(args.model)
+    #model = load_model(args.model)
+	#""" eslam
+    model = Sequential()
+    model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
+    model.add(Cropping2D(cropping=((70,25), (0,0))))
+	
+    #first convolution layer
+    add_convolutional_layer(24, 5)
+    model.add(MaxPooling2D((2, 2)))
+    
+    #second convolution layer
+    add_convolutional_layer(36, 5)
+    
+    #third convolution layer
+    add_convolutional_layer(48, 5)
+    model.add(MaxPooling2D((2, 2)))
+    
+    #forth convolution layer
+    add_convolutional_layer(64, 3)
+    
+    #fifth convolution layer
+    add_convolutional_layer(64, 3)
+    model.add(MaxPooling2D((2, 2)))
+    
+    model.add(Flatten()) # flatten the model into 1 dimension.
+    
+    #first fully connected
+    model.add(Dense(1164))
+    add_relu_activation_function()
+    
+    #second fully connected
+    model.add(Dense(100))
+    add_relu_activation_function()
+    
+    #third fully connected
+    model.add(Dense(50))
+    add_relu_activation_function()
+    
+    #forth fully connected
+    model.add(Dense(10))
+    add_relu_activation_function()
+    
+    #last fully connected
+    model.add(Dense(1))
+    
+    model.compile(loss = 'mse', optimizer = 'adam')
+    model.load_weights(args.model)
+	#"""
 
     if args.image_folder != '':
         print("Creating image folder at {}".format(args.image_folder))
